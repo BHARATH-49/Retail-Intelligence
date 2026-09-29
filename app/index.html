@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retail Intelligence · Forecast and restocking</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand-mark" aria-hidden="true">RI</div>
+    <div>
+      <div class="brand-name">Retail Intelligence</div>
+      <div class="brand-caption">Forecast and restocking</div>
+    </div>
+    <span class="header-pill">V1 working preview</span>
+  </header>
+
+  <main>
+    <section class="intro">
+      <p class="eyebrow">V1 WORKING VIEW</p>
+      <h1>Check a demand forecast, then plan stock around it.</h1>
+      <p>The new panel uses a saved seven-day forecast and stock details you enter. The historical comparison below shows how earlier forecast methods performed on past weeks.</p>
+    </section>
+
+    <section class="detail card restock-section" aria-labelledby="restock-title">
+      <p class="eyebrow">FORECAST AND INVENTORY</p>
+      <h2 id="restock-title">Seven-day restocking check</h2>
+      <p>Choose a saved forecast, then enter your shop’s stock and delivery facts. The available example predicts August 16–22, 2017, immediately after this dataset ends; it is a demonstration, not a current live forecast. Favorita contains no usable-stock values.</p>
+      <label for="future-forecast">Saved forecast</label>
+      <select id="future-forecast"></select>
+      <p id="future-status" role="status" aria-live="polite"></p>
+      <div class="table-wrap future-table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>LightGBM forecast</th><th>Four-week median reference</th></tr></thead>
+          <tbody id="future-table"></tbody>
+        </table>
+      </div>
+      <form id="restock-form">
+        <h3>Owner-entered stock and supplier details</h3>
+        <div class="input-grid">
+          <div class="control"><label for="stock-on-hand">Usable stock now</label><input id="stock-on-hand" type="number" min="0" step="any" required placeholder="Enter quantity"></div>
+          <div class="control"><label for="stock-unit">Stock unit</label><input id="stock-unit" type="text" required placeholder="e.g. pieces or kg"></div>
+          <div class="control"><label for="order-increment">Smallest order increment</label><input id="order-increment" type="number" min="0.000001" step="any" required placeholder="1 for pieces, 0.1 for kg"></div>
+          <div class="control"><label for="lead-days">Supplier delivery time (days)</label><input id="lead-days" type="number" min="0" step="1" required placeholder="e.g. 2"></div>
+          <div class="control"><label for="incoming-units">Already on order (units)</label><input id="incoming-units" type="number" min="0" step="any" required value="0"></div>
+          <div class="control"><label for="incoming-day">Arrival day if already on order</label><input id="incoming-day" type="number" min="0" step="1" placeholder="0 = first forecast day" disabled></div>
+          <div class="control"><label for="extra-cover">Extra days of cover</label><input id="extra-cover" type="number" min="0" step="any" required value="1"></div>
+          <div class="control"><label for="minimum-order">Supplier minimum (optional)</label><input id="minimum-order" type="number" min="0" step="any" placeholder="Leave blank if unknown"></div>
+          <div class="control"><label for="pack-multiple">Pack multiple (optional)</label><input id="pack-multiple" type="number" min="0.000001" step="any" placeholder="Leave blank if unknown"></div>
+          <div class="control"><label for="shelf-life">Shelf life in days (optional)</label><input id="shelf-life" type="number" min="1" step="1" placeholder="Leave blank if unknown"></div>
+        </div>
+        <button type="submit">Calculate restocking check</button>
+        <p id="restock-status" role="status" aria-live="polite"></p>
+      </form>
+      <div id="restock-results" hidden>
+        <div class="result-grid">
+          <article class="metric"><div class="metric-label">Expected demand · 7 days</div><strong id="demand-result">—</strong></article>
+          <article class="metric"><div class="metric-label">Current-stock cover</div><strong id="cover-result">—</strong></article>
+          <article class="metric"><div class="metric-label">Reorder point</div><strong id="reorder-result">—</strong></article>
+          <article class="metric"><div class="metric-label">Suggested order now</div><strong id="quantity-result">—</strong></article>
+        </div>
+        <p id="buffer-result"></p>
+        <p id="order-message" class="result-message"></p>
+        <p id="shortage-message" class="result-message"></p>
+        <p id="shelf-message" class="result-message"></p>
+        <p class="result-limit">This is forecast-based planning advice, not a stockout probability or confirmed demand. A saved forecast does not use your shop’s live sales.</p>
+      </div>
+    </section>
+
+    <section class="detail card model-scorecard" aria-labelledby="model-metrics-title">
+      <p class="eyebrow">HISTORICAL MODEL CHECK</p>
+      <h2 id="model-metrics-title">How accurate was the provisional forecast?</h2>
+      <p id="model-metrics-intro">Loading matched validation results…</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Average miss (MAE)</th><th>WAPE</th><th>RMSE</th><th>Large misses (&gt;20 units)</th></tr></thead>
+          <tbody id="model-metrics-table"></tbody>
+        </table>
+      </div>
+      <p class="result-limit">Lower is better for these error measures. MAE is the average miss in sales units per product-day. WAPE compares total absolute error with total recorded or assumed sales. RMSE gives extra weight to large misses. These are past test results across selected stores and weeks, not an accuracy score for the future dates above or a guarantee for your shop.</p>
+    </section>
+
+    <section class="historical-heading">
+      <p class="eyebrow">PAST TESTS</p>
+      <h2>Check historical forecast errors</h2>
+      <p>These tests compare earlier four-week and linear methods with sales recorded afterward. They are separate from the provisional LightGBM forecast above.</p>
+    </section>
+
+    <section class="controls card" aria-label="Choose a forecast">
+      <div class="control">
+        <label for="experiment">Test week</label>
+        <select id="experiment"></select>
+      </div>
+      <div class="control">
+        <label for="product-search">Find product number</label>
+        <input id="product-search" type="search" inputmode="numeric" placeholder="Type a product number">
+      </div>
+      <div class="control">
+        <label for="product">Product number</label>
+        <select id="product"></select>
+      </div>
+      <p id="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="overview" aria-label="Test overview">
+      <article class="metric card">
+        <div class="metric-label">Products evaluated</div>
+        <strong id="product-count">—</strong>
+        <span>At the selected store and test week</span>
+      </article>
+      <article class="metric card">
+        <div class="metric-label">Four-week average error</div>
+        <strong id="average-error">—</strong>
+        <span>Average miss in units per day</span>
+      </article>
+      <article class="metric card">
+        <div class="metric-label">Linear model error</div>
+        <strong id="linear-error">—</strong>
+        <span>Average miss in units per day</span>
+      </article>
+      <article class="metric card">
+        <div class="metric-label">Always-zero error</div>
+        <strong id="zero-error">—</strong>
+        <span>Reference prediction for every day</span>
+      </article>
+    </section>
+
+    <section class="detail card" aria-labelledby="detail-title">
+      <div class="section-top">
+        <div>
+          <p class="eyebrow">PRODUCT DETAIL</p>
+          <h2 id="detail-title">Choose a product</h2>
+          <p id="detail-subtitle"></p>
+        </div>
+        <div class="detail-score" id="detail-score"></div>
+      </div>
+      <div class="legend" aria-label="Chart legend">
+        <span><i class="key actual"></i> Recorded or assumed sales</span>
+        <span><i class="key average"></i> Four-week average</span>
+        <span><i class="key linear"></i> Linear model</span>
+      </div>
+      <div class="chart-wrap">
+        <svg id="chart" viewBox="0 0 780 290" role="img" aria-label="Daily sales and forecast comparison"></svg>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Actual sales</th><th>Four-week forecast</th><th>Linear forecast</th><th>Source of actual</th></tr></thead>
+          <tbody id="detail-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <aside class="note">
+      <h2>How to read this view</h2>
+      <p>These are past test weeks. The forecast methods used earlier sales to predict each day; “actual” sales were revealed afterward. When the source data had no row for a product on a test day, this project assumed zero sales and labels it “assumed zero.” That does not prove there was no customer demand or that the product was in stock.</p>
+      <p>The historical comparison does not use your stock inputs. The restocking panel above uses a saved future forecast and the stock details you enter; its suggested quantity is a planning estimate.</p>
+    </aside>
+  </main>
+</body>
+</html>

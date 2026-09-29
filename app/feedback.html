@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop feedback · Retail Intelligence</title>
+  <link rel="stylesheet" href="/owner.css">
+  <script src="/feedback.js" defer></script>
+</head>
+<body>
+  <header class="app-header"><div class="brand"><span class="brand-mark">RI</span><span><strong>Retail Intelligence</strong><small>Customer feedback</small></span></div></header>
+  <main class="feedback-page">
+    <p id="demo-banner" class="notice" hidden></p>
+    <p class="eyebrow">YOUR VOICE</p>
+    <h1>Tell the shop what you think</h1>
+    <p class="muted">Suggest a product or describe something the shop could improve. Your words go to the owner for review; they do not automatically change prices, forecasts, or orders.</p>
+    <div class="card">
+      <form id="customer-feedback-form" class="form-grid">
+        <label>What is this about?
+          <select id="feedback-category" required>
+            <option value="product_request">A product I would like</option>
+            <option value="stockout">An empty shelf</option>
+            <option value="quality">Product quality</option>
+            <option value="service">Shop service</option>
+            <option value="facility_idea">A shop improvement</option>
+            <option value="review">Something else</option>
+          </select>
+        </label>
+        <label>Product or area, if relevant<input id="feedback-product" maxlength="100" placeholder="e.g. tea or checkout"></label>
+        <label class="wide">Your comment<textarea id="feedback-note" rows="5" maxlength="1000" required placeholder="Tell the owner what happened or what you would like."></textarea></label>
+        <div class="form-actions"><button type="submit">Send feedback</button></div>
+      </form>
+      <p id="feedback-message" class="message" role="status" aria-live="polite"></p>
+    </div>
+    <p class="muted">This V1 feedback page runs only on the local prototype.</p>
+  </main>
+</body>
+</html>

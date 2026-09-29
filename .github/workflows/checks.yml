@@ -1,0 +1,27 @@
+name: Application checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check container build
+        run: docker build -t retail-intelligence:check .
+      - name: Check application starts
+        run: |
+          docker run --rm -d --name retail-intelligence-check -p 127.0.0.1:8000:8000 retail-intelligence:check
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8000/healthz; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs retail-intelligence-check
+          exit 1
+      - name: Stop check container
+        if: always()
+        run: docker rm -f retail-intelligence-check || true

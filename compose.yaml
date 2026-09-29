@@ -1,0 +1,18 @@
+services:
+  shop:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - shop_data:/app/data/app
+      - ./data/processed:/app/data/processed:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3).close()"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    restart: unless-stopped
+
+volumes:
+  shop_data:

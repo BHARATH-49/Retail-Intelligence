@@ -1,0 +1,32 @@
+{
+  "store_display_name": "6-Seven",
+  "source_store_nbr": 44,
+  "name_reference": "https://www.eureka.com.ec/",
+  "disclosure": "These product names and pack sizes are illustrative labels inspired by Eureka's catalogue. Favorita does not identify the real names of its numbered items. No Favorita item numbers, sales records, supplier prices, or stock balances are included here.",
+  "products": [
+    {"family": "BEVERAGES", "display_name": "COCA COLA ORIGINAL 300 ML", "sale_unit": "bottle", "supplier_pack_units": 12, "source_title": "COCA COLA ORIGINAL CAJA (12 X 300 ML)", "source_page": "https://www.eureka.com.ec/clasica/487-gaseosas-2"},
+    {"family": "BEVERAGES", "display_name": "COCA COLA ORIGINAL 500 ML", "sale_unit": "bottle", "supplier_pack_units": 12, "source_title": "COCA COLA ORIGINAL CAJA (12 X 500 ML)", "source_page": "https://www.eureka.com.ec/clasica/487-gaseosas-2"},
+    {"family": "BEVERAGES", "display_name": "SPRITE 300 ML", "sale_unit": "bottle", "supplier_pack_units": 12, "source_title": "SPRITE CAJA (12 X 300 ML)", "source_page": "https://www.eureka.com.ec/clasica/487-gaseosas-2"},
+    {"family": "BEVERAGES", "display_name": "FIORAVANTI FRESA 300 ML", "sale_unit": "bottle", "supplier_pack_units": 12, "source_title": "FIORAVANTI FRESA CAJA (12 X 300 ML)", "source_page": "https://www.eureka.com.ec/clasica/487-gaseosas-2"},
+    {"family": "BEVERAGES", "display_name": "GÜITIG AGUA CON GAS 500 ML", "sale_unit": "bottle", "supplier_pack_units": 12, "source_title": "AGUA CON GAS GÜITIG CAJA (12 X 500 ML)", "source_page": "https://www.eureka.com.ec/365-jugos-bebidas-y-pulpas"},
+    {"family": "BEVERAGES", "display_name": "DASANI AGUA SIN GAS 1.2 L", "sale_unit": "bottle", "supplier_pack_units": 6, "source_title": "AGUA SIN GAS DASANI CAJA (6 X 1.2 L)", "source_page": "https://www.eureka.com.ec/365-jugos-bebidas-y-pulpas"},
+    {"family": "BEVERAGES", "display_name": "NATURA NÉCTAR DE NARANJA 1 L", "sale_unit": "carton", "supplier_pack_units": 1, "source_title": "NECTAR DE NARANJA NATURA 1 LT", "source_page": "https://www.eureka.com.ec/370-jugos-nectares-y-solubles-c2"},
+    {"family": "BEVERAGES", "display_name": "COCO FREEZE AGUA DE COCO 1 L", "sale_unit": "carton", "supplier_pack_units": 1, "source_title": "AGUA DE COCO COCO FREEZE 1 LT", "source_page": "https://www.eureka.com.ec/365-jugos-bebidas-y-pulpas"},
+    {"family": "DAIRY", "display_name": "LA LECHERA LECHE SEMIDESCREMADA 1 L", "sale_unit": "carton", "supplier_pack_units": 1, "source_title": "LECHE SEMIDESCREMADA TETRAPACK LA LECHERA 1 LT", "source_page": "https://www.eureka.com.ec/372-lacteos-y-huevos?page=2"},
+    {"family": "DAIRY", "display_name": "KIOSKO QUESO MOZZARELLA 900 G", "sale_unit": "pack", "supplier_pack_units": 1, "source_title": "QUESO MOZZARELLA KIOSKO 900 G", "source_page": "https://www.eureka.com.ec/372-lacteos-y-huevos?page=2"},
+    {"family": "DAIRY", "display_name": "KIOSKO QUESO RICOTTA 450 G", "sale_unit": "pack", "supplier_pack_units": 1, "source_title": "QUESO RICOTTA KIOSKO 450 G", "source_page": "https://www.eureka.com.ec/372-lacteos-y-huevos?page=2"},
+    {"family": "DAIRY", "display_name": "TONI YOGURT NATURAL SIN AZÚCAR 1.7 KG", "sale_unit": "tub", "supplier_pack_units": 1, "source_title": "YOGURT ENTERO NATURAL SIN AZUCAR TONI 1.7 KG", "source_page": "https://www.eureka.com.ec/372-lacteos-y-huevos?page=2"},
+    {"family": "GROCERY I", "display_name": "REAL ARROZ BLANCO 25 LB", "sale_unit": "bag", "supplier_pack_units": 1, "source_title": "ARROZ BLANCO REAL 25 LB", "source_page": "https://www.eureka.com.ec/94-arroz"},
+    {"family": "GROCERY I", "display_name": "REAL ARROZ VIEJO 5 KG", "sale_unit": "bag", "supplier_pack_units": 1, "source_title": "ARROZ VIEJO REAL 5 KG", "source_page": "https://www.eureka.com.ec/94-arroz"},
+    {"family": "GROCERY I", "display_name": "REAL ATÚN EN ACEITE DE GIRASOL 180 G", "sale_unit": "can", "supplier_pack_units": 1, "source_title": "ATUN ACEITE DE GIRASOL REAL ABRE FACIL 180 G", "source_page": "https://www.eureka.com.ec/37-enlatados-y-conservas"},
+    {"family": "GROCERY I", "display_name": "FACUNDO GARBANZO 425 G", "sale_unit": "can", "supplier_pack_units": 1, "source_title": "GARBANZO FACUNDO 425 G", "source_page": "https://www.eureka.com.ec/37-enlatados-y-conservas"},
+    {"family": "GROCERY I", "display_name": "SNOB CHAMPIÑONES TAJADOS 400 G", "sale_unit": "can", "supplier_pack_units": 1, "source_title": "CHAMPIÑONES TAJADOS SNOB 400 G", "source_page": "https://www.eureka.com.ec/37-enlatados-y-conservas"},
+    {"family": "BREAD/BAKERY", "display_name": "SUPAN PAN BLANCO MOLDE 550 G", "sale_unit": "loaf", "supplier_pack_units": 1, "source_title": "PAN BLANCO MOLDE SUPAN 550 G", "source_page": "https://www.eureka.com.ec/407-panes-tortillas-y-apanaduras-c2"},
+    {"family": "BREAD/BAKERY", "display_name": "BIMBO PAN BLANCO SIN CORTEZA 450 G", "sale_unit": "loaf", "supplier_pack_units": 1, "source_title": "PAN BLANCO SIN CORTEZA BIMBO 450 G", "source_page": "https://www.eureka.com.ec/407-panes-tortillas-y-apanaduras-c2"},
+    {"family": "BREAD/BAKERY", "display_name": "MODERNA PAN INTEGRAL 575 G", "sale_unit": "loaf", "supplier_pack_units": 1, "source_title": "PAN INTEGRAL MODERNA 575 G", "source_page": "https://www.eureka.com.ec/407-panes-tortillas-y-apanaduras-c2"},
+    {"family": "CLEANING", "display_name": "DEJA DETERGENTE EN POLVO BRISA DE PRIMAVERA 5 KG", "sale_unit": "bag", "supplier_pack_units": 1, "source_title": "DETERGENTE EN POLVO CON SUAVIZANTE BRISA DE PRIMAVERA DEJA 5 KG", "source_page": "https://www.eureka.com.ec/63-limpieza-y-sanitizacion"},
+    {"family": "CLEANING", "display_name": "AJAX DESINFECTANTE NARANJA LIMÓN 3 L", "sale_unit": "bottle", "supplier_pack_units": 1, "source_title": "DESINFECTANTE CON BICARBONATO NARANJA LIMON AJAX 3 LT", "source_page": "https://www.eureka.com.ec/clasica/505-productos-de-limpieza-12?page=2"},
+    {"family": "CLEANING", "display_name": "KALIPTO LIMPIADOR EUCALIPTO 1 GL", "sale_unit": "bottle", "supplier_pack_units": 1, "source_title": "DESINFECTANTE LIMPIADOR EUCALIPTO KALIPTO 1 GL", "source_page": "https://www.eureka.com.ec/64-desinfectante"},
+    {"family": "CLEANING", "display_name": "SUPERMAXI PAPEL HIGIÉNICO DOBLE HOJA X12", "sale_unit": "pack", "supplier_pack_units": 1, "source_title": "PAPEL HIGIENICO DOBLE HOJA SUPERMAXI (X 12)", "source_page": "https://www.eureka.com.ec/brand/199-supermaxi?page=2"}
+  ]
+}

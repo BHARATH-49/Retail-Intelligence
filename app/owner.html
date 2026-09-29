@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retail Intelligence · Shop workspace</title>
+  <link rel="stylesheet" href="/owner.css">
+  <script src="/owner.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand"><span class="brand-mark">RI</span><span><strong>Retail Intelligence</strong><small id="shop-label">Your shop workspace</small></span></div>
+    <div class="header-links"><a href="/feedback" target="_blank" rel="noopener">Customer feedback page</a><a href="/research">Model research</a></div>
+  </header>
+  <div class="shell">
+    <nav class="main-nav" aria-label="Owner sections">
+      <button type="button" class="active" data-tab="forecast">Forecast</button>
+      <button type="button" data-tab="billing">Billing</button>
+      <button type="button" data-tab="store">Store</button>
+      <button type="button" data-tab="to-buy">To-buy</button>
+    </nav>
+    <main>
+      <p id="demo-banner" class="notice" hidden></p>
+      <p id="global-message" class="message" role="status" aria-live="polite"></p>
+
+      <section id="panel-forecast" class="tab-panel">
+        <div class="page-heading"><div><p class="eyebrow">DEMAND & STOCK</p><h1>Forecast</h1><p id="forecast-date-note" class="muted">Close a day in Billing to prepare the next dated forecast.</p></div><div class="button-row"><button type="button" class="secondary" id="refresh-forecast-view">Refresh view</button><button type="button" class="secondary" id="retry-forecast" hidden>Retry calculation</button></div></div>
+        <div class="notice">After a day closes, forecast work continues in the background. This screen shows its progress and then one dated forecast. Restocking uses the following seven days, delivery time, and your stock settings. Shop forecasts appear only after about six months of closed daily records and a later-date LightGBM check.</div>
+        <div class="card"><div class="card-heading"><h2>Products</h2><span id="forecast-count" class="badge">0 products</span></div>
+          <div class="table-wrap"><table><thead><tr><th>Product</th><th>Stock now</th><th>Forecast for date</th><th>Restocking check</th><th>Your choice</th></tr></thead><tbody id="forecast-rows"></tbody></table></div>
+        </div>
+        <div class="card slim"><h2>What the number means</h2><p>A forecast estimates units sold; it is not a guarantee. “History needed” means this shop product has not yet passed the required history and later-date checks. You can still bill it and manage its stock.</p></div>
+      </section>
+
+      <section id="panel-billing" class="tab-panel" hidden>
+        <div class="page-heading"><div><p class="eyebrow">CUSTOMER SALES</p><h1>Billing</h1><p>Complete a customer bill to record sales and reduce stock once.</p></div></div>
+        <div class="sub-nav" aria-label="Billing views"><button type="button" class="active" data-billing-view="new">New bill</button><button type="button" data-billing-view="history">History</button></div>
+        <div id="billing-new" class="sub-panel">
+          <div class="card"><h2>Create a bill</h2>
+            <form id="bill-line-form" class="form-grid compact">
+              <label>Product<select id="bill-product" required></select></label>
+              <label>Quantity<input id="bill-quantity" type="number" min="0.001" step="any" value="1" required></label>
+              <label>Selling price per unit<input id="bill-price" type="number" min="0" step="0.01" required></label>
+              <button type="submit" class="secondary align-end">Add to bill</button>
+            </form>
+            <div class="table-wrap"><table><thead><tr><th>Product</th><th>Quantity</th><th>Unit price</th><th>Line total</th><th></th></tr></thead><tbody id="bill-lines"></tbody></table></div>
+            <div class="bill-footer"><strong id="bill-total">Total 0.00</strong><button type="button" id="complete-bill">Complete bill</button></div>
+            <p id="bill-message" class="message" role="status"></p>
+          </div>
+        </div>
+        <div id="billing-history" class="sub-panel" hidden>
+          <div class="card"><div class="card-heading"><div><h2>Customer transactions</h2><p>Completed and voided bills for this date.</p></div><label>Day<input id="history-day" type="date"></label></div>
+            <div id="day-summary" class="summary-strip"></div>
+            <div class="table-wrap"><table><thead><tr><th>Bill ID</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody id="history-rows"></tbody></table></div>
+            <div class="button-row"><button type="button" id="done-day">Done for the day</button><button type="button" class="secondary" id="reopen-day" hidden>Correct a closed day</button></div>
+            <p class="muted">The first click reviews the day. A separate confirmation closes it; an accidental close can be reopened with a recorded reason.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-store" class="tab-panel" hidden>
+        <div class="page-heading"><div><p class="eyebrow">SHOP RECORDS</p><h1>Store</h1><p>Maintain products and review suggestions for the shop.</p></div></div>
+        <div class="sub-nav" aria-label="Store views"><button type="button" class="active" data-store-view="catalogue">Catalogue</button><button type="button" data-store-view="opportunities">Opportunities</button></div>
+        <div id="store-catalogue" class="sub-panel">
+          <div class="card"><h2>Shop details</h2><form id="settings-form" class="form-grid compact">
+            <label>Shop name<input id="shop-name" type="text" maxlength="100" required></label>
+            <label>Currency (three letters)<input id="shop-currency" type="text" minlength="3" maxlength="3" placeholder="e.g. USD" required></label>
+            <button type="submit" class="secondary align-end">Save shop details</button>
+          </form></div>
+          <div class="card"><div class="card-heading"><h2>Catalogue & stock</h2><span id="product-count" class="badge">0 products</span></div>
+            <div class="table-wrap"><table><thead><tr><th>Product</th><th>Code</th><th>Stock</th><th>Selling price</th><th>Delivery</th><th></th></tr></thead><tbody id="product-rows"></tbody></table></div>
+            <details id="product-details"><summary>Add or edit a product</summary>
+              <form id="product-form" class="form-grid">
+                <input id="product-id" type="hidden">
+                <label>Product code<input id="product-sku" maxlength="100" required></label>
+                <label>Product name<input id="product-name" maxlength="100" required></label>
+                <label>Counting unit<input id="product-unit" placeholder="e.g. cartons" maxlength="100" required></label>
+                <label>Selling price<input id="product-price" type="number" min="0" step="0.01" required></label>
+                <label class="new-only">Opening stock<input id="product-opening" type="number" min="0" step="any" value="0" required></label>
+                <label class="new-only">First stocked on<input id="product-first-day" type="date" required></label>
+                <label>Delivery time (days)<input id="product-lead" type="number" min="0" step="1" value="1" required></label>
+                <label>Smallest order increment<input id="product-increment" type="number" min="0.001" step="any" value="1" required></label>
+                <label>Extra cover days<input id="product-cover" type="number" min="0" step="any" value="1" required></label>
+                <label>Incoming units<input id="product-incoming" type="number" min="0" step="any" value="0"></label>
+                <label>Incoming arrival day (0 = first forecast day)<input id="product-incoming-day" type="number" min="0" step="1"></label>
+                <label>Shelf life in days, if relevant<input id="product-shelf" type="number" min="1" step="1"></label>
+                <div class="form-actions"><button type="submit">Save product</button><button type="button" class="secondary" id="product-reset">Clear form</button></div>
+              </form>
+              <p class="muted">Opening stock is set once. Later changes go through the delivery and correction record below.</p>
+            </details>
+          </div>
+          <div class="card"><h2>Delivery or stock correction</h2><form id="stock-form" class="form-grid compact">
+            <label>Product<select id="stock-product" required></select></label>
+            <label>Day<input id="stock-day" type="date" required></label>
+            <label>Reason<select id="stock-reason"><option value="delivery">Delivery</option><option value="return">Return</option><option value="correction">Correction</option></select></label>
+            <label>Change in units<input id="stock-change" type="number" step="any" placeholder="+10 or -2" required></label>
+            <label class="wide">Note<input id="stock-note" maxlength="300" placeholder="What changed?"></label>
+            <button type="submit" class="secondary align-end">Record stock change</button>
+          </form></div>
+        </div>
+        <div id="store-opportunities" class="sub-panel" hidden>
+          <div class="card"><h2>Add an owner note</h2><p>Record a product idea or a possible shop improvement. Customer feedback arrives from the separate feedback page.</p>
+            <form id="owner-note-form" class="form-grid compact">
+              <label>Day<input id="owner-note-day" type="date" required></label>
+              <label>Type<select id="owner-note-category"><option value="new_product_idea">Product idea</option><option value="service">Service issue</option><option value="facility_idea">Facility idea</option><option value="review">Other note</option></select></label>
+              <label>Product or area<input id="owner-note-product" placeholder="e.g. tea or checkout"></label>
+              <label class="wide">Your note<textarea id="owner-note-text" rows="2" maxlength="1000" required></textarea></label>
+              <button type="submit" class="secondary align-end">Save note</button>
+            </form></div>
+          <div class="two-columns"><div class="card"><h2>Products to consider</h2><div id="opportunity-ideas" class="stack"></div></div><div class="card"><h2>Store improvements</h2><div id="opportunity-actions" class="stack"></div></div></div>
+        </div>
+      </section>
+
+      <section id="panel-to-buy" class="tab-panel" hidden>
+        <div class="page-heading"><div><p class="eyebrow">OWNER DECISION</p><h1>To-buy</h1><p>Only products you choose appear here. Price checks start when you press Compare prices.</p></div></div>
+        <div class="card"><h2>Add to your list</h2><form id="to-buy-form" class="form-grid compact">
+          <label>Product<select id="buy-product" required></select></label>
+          <label>Quantity to consider<input id="buy-quantity" type="number" min="0.001" step="any" required></label>
+          <label>Needed within (days)<input id="buy-days" type="number" min="0" step="1" value="7" required></label>
+          <button type="submit" class="secondary align-end">Add to To-buy</button>
+        </form>
+          <div class="table-wrap"><table><thead><tr><th>Product</th><th>Quantity</th><th>Needed within</th><th></th></tr></thead><tbody id="buy-rows"></tbody></table></div>
+        </div>
+        <div class="card"><div class="card-heading"><div><h2>Compare prices and sources</h2><p>Only complete, matching offers can be recommended. Website observations with missing terms remain visible for review.</p></div><button type="button" id="compare-prices">Compare prices</button></div><div id="comparison-results" class="stack"></div></div>
+        <div class="two-columns">
+          <details class="card"><summary>Add a supplier or local quote</summary><form id="offer-form" class="form-grid compact">
+            <label>Product<select id="offer-product" required></select></label><label>Supplier<input id="offer-supplier" required></label>
+            <label>Route<select id="offer-channel"><option value="owner_quote">Local/owner quote</option><option value="online_order">Online order</option><option value="offline_reference">Offline reference only</option></select></label>
+            <label>Source link, if any<input id="offer-url" type="url"></label>
+            <label>Units per pack<input id="offer-pack" type="number" min="0.001" step="any" required></label>
+            <label>Price per pack<input id="offer-price" type="number" min="0" step="0.01" required></label>
+            <label>Minimum units<input id="offer-minimum" type="number" min="0" step="any" placeholder="Unknown if blank"></label>
+            <label>Available units<input id="offer-available" type="number" min="0" step="any" placeholder="Unknown if blank"></label>
+            <label>Delivery days<input id="offer-delivery" type="number" min="0" step="1" placeholder="Unknown if blank"></label>
+            <label>Delivery fee<input id="offer-fee" type="number" min="0" step="0.01" placeholder="Unknown if blank"></label>
+            <button type="submit" class="secondary align-end">Save quote</button>
+          </form></details>
+          <details class="card"><summary>Track a trusted product webpage</summary><form id="web-form" class="form-grid compact">
+            <label>Catalogue product<select id="web-product" required></select></label>
+            <label>Website name<input id="web-site" required></label>
+            <label>Approved website domain<input id="web-host" placeholder="shop.example.com" required></label>
+            <label>Exact website SKU<input id="web-sku" required></label>
+            <label class="wide">Exact HTTPS product link<input id="web-url" type="url" required></label>
+            <label>Route<select id="web-mode"><option value="online_order">Online order</option><option value="offline_reference">Price reference only</option></select></label>
+            <label class="check"><input id="web-match" type="checkbox"> I confirmed the exact product and pack match</label>
+            <label>Units per pack<input id="web-pack" type="number" min="0.001" step="any"></label>
+            <label>Minimum units<input id="web-minimum" type="number" min="0" step="any"></label>
+            <label>Available units<input id="web-available" type="number" min="0" step="any"></label>
+            <label>Delivery days<input id="web-delivery" type="number" min="0" step="1"></label>
+            <label>Delivery fee<input id="web-fee" type="number" min="0" step="0.01"></label>
+            <button type="submit" class="secondary align-end">Save trusted link</button>
+          </form></details>
+        </div>
+      </section>
+    </main>
+  </div>
+  <dialog id="close-dialog">
+    <h2>Close this day?</h2><div id="close-preview"></div>
+    <p>Confirming records the day once and prepares the next dated forecast. You can cancel now or later reopen with a reason.</p>
+    <div class="button-row"><button type="button" class="secondary" id="cancel-close">Cancel</button><button type="button" id="confirm-close">Confirm day close</button></div>
+  </dialog>
+  <dialog id="reopen-dialog">
+    <h2>Correct a closed day</h2><p>Give a reason. The existing forecast for this close will be removed; close the corrected day again to recalculate it.</p>
+    <label>Reason<textarea id="reopen-reason" rows="3" minlength="5" required></textarea></label>
+    <div class="button-row"><button type="button" class="secondary" id="cancel-reopen">Cancel</button><button type="button" id="confirm-reopen">Reopen day</button></div>
+  </dialog>
+</body>
+</html>
