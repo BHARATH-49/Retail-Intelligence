@@ -1,49 +1,126 @@
 # Retail Intelligence
 
-Retail Intelligence V1 is a **local research prototype** for a shop owner. It joins billing, stock records, demand forecasting, restocking suggestions, customer feedback, and purchase comparison. It is a demonstration of a workflow, not a released system for real purchasing or formal invoices.
+Retail Intelligence is a local prototype for exploring how a retail
+application can connect sales records, demand forecasts, inventory decisions,
+customer feedback, and supplier comparisons. It is intended for demonstration
+and research, not for live purchasing or tax-compliant billing.
 
-## Run the application
+## What the application does
 
-To prepare the optional **6-Seven historical showcase**, obtain your own
-Favorita competition download and put `train.csv` and `items.csv` in
-`data/raw/`. From the project folder, run:
+| Area | Function |
+| --- | --- |
+| Catalogue and stock | Records products, starting stock, deliveries, corrections, and purchasing settings. |
+| Billing | Saves itemised receipts and deducts sold quantities from stock. Voiding a receipt restores those quantities. |
+| Daily close | Confirms the day's sales once, including zero-sale observations for stocked products. The latest closed day can be reopened with a recorded reason. |
+| Forecast and restocking | Checks whether each product has enough dated sales history, evaluates a shop-specific LightGBM forecast against a simple reference, and shows a next-day forecast and restocking check only when the model passes. |
+| Opportunities | Organises customer feedback and owner notes into product ideas and store-improvement suggestions. |
+| To-buy | Compares complete supplier offers for products and quantities selected by the owner. It does not place orders. |
 
-```powershell
-.\.venv\Scripts\python.exe -m demo.prepare_showcase
-docker compose -f compose.demo.yaml up --build
-```
+The owner application, customer feedback form, and historical research explorer
+are separate pages. The application stores shop records in SQLite and runs a
+background forecast job after a daily close.
 
-Open <http://127.0.0.1:8001>. This uses an isolated, ignored database at
-`data/app/demo/shop.sqlite3`; it never replaces the normal shop database.
-The 24 catalogue products are selected by recent recorded history within
-their families. On 15 August 2017, three illustrative bills are ready for
-review and that day remains open for the viewer to close. Product names,
-stock, bills, prices, and supplier quotes are invented and labelled in the
-application. The linked supplier pages are catalogue references, not evidence
-that the invented prices or availability were published there. A missing
-Favorita sales row is treated as zero for this replay,
-which does not prove zero demand. The generated selection record stays local
-at `data/app/demo/selection.json`. The showcase preparer refuses to overwrite
-an existing demo database.
+## Run a blank shop
 
-From the project folder in PowerShell:
+Docker Desktop with Compose is required for the containerised setup. From the
+repository root:
 
 ```powershell
-.\.venv\Scripts\python.exe app/server.py
+docker compose up --build -d
 ```
 
-Open <http://127.0.0.1:8000>. Press Ctrl+C in the terminal to stop. The application binds to this computer only. Runtime dependencies are listed in `requirements-app.txt`; the project uses Python's standard-library web server, SQLite, NumPy, and LightGBM. No fictional shop, catalogue, bills, or sales history is installed. Running directly creates a local database at `data/app/shop.sqlite3`, which Git ignores. Keep a backup of that file if your own entered records matter. The Docker setup uses a separate persistent volume.
+Open <http://127.0.0.1:8000> for the owner application or
+<http://127.0.0.1:8000/feedback> for the customer feedback form. The shop
+database is stored in the persistent `shop_data` Docker volume. The application
+starts with an empty catalogue.
 
-The older Favorita experiment explorer is at <http://127.0.0.1:8000/research>. It reads saved results from `data/processed/` when present. The owner application starts even if those research files are absent. The separate customer feedback form is at <http://127.0.0.1:8000/feedback>; it is local to this computer, with no customer authentication.
+To stop the container:
 
-## Owner workflow
+```powershell
+docker compose down
+```
 
-1. **Store → Catalogue:** Set a shop name and currency. Add products with a unique code, counting unit, selling price, opening stock, delivery time, order increment, preferred extra days of cover, and optional shelf life or incoming stock. Later deliveries and corrections change stock through a dated record; opening stock is set once.
-2. **Billing → New bill:** Add product quantities and prices, then complete a bill. The app records today's transaction and deducts each product quantity once. **Billing → History** shows that day's completed and voided bills. Voiding a bill restores its stock.
-3. **Done for the day:** Review bill count, sales total, and current stock in a confirmation dialog. Closing the day records an explicit daily sales observation, including zero sales for products with no bills. If a day was closed by mistake, reopen the latest closed day with a reason, correct it, and close it again. The earlier forecast is removed on reopening.
-4. **Forecast:** The app attempts a shop-specific LightGBM model after a product has **180 consecutive explicitly closed days** since it was first stocked. It checks predictions on the last three historical weeks against a simple four-week same-weekday reference. If history is incomplete or the model does worse, the screen shows “History needed” or “Model check did not pass,” with no numeric recommendation. A passing model gives a dated next-day forecast and uses its next seven daily estimates with current stock and delivery settings for a restocking check. The owner decides whether to add any quantity to To-buy.
-5. **Store → Opportunities:** Customer feedback and owner notes produce product ideas and store-improvement issues for review. These are suggestions based on the entered words, not predictions of new-product demand.
-6. **To-buy:** The owner selects products and quantities. The **Compare prices** button evaluates saved local supplier quotes and approved exact-product website links. A page price is only an observation; a buyable recommendation needs the owner's product/pack confirmation plus availability, delivery time, fees, and other complete terms. Offline-only price references can be viewed but cannot win an online order recommendation. The app does not place orders.
+The research explorer is available at <http://127.0.0.1:8000/research> when
+the saved experiment files are present under `data/processed/`. Those files
+are local research outputs and are not included in this repository.
 
-The Favorita research model and metrics are separate from a shop's own forecast. Historical public-data accuracy does **not** establish how accurate a new shop forecast will be. The shop-specific model is only a prototype adaptation, and the three-week check is a gate rather than proof that its advice is safe for actual stock decisions. There is currently no owner-facing bulk import of shop sales, no login, no tax-compliant invoicing, and no deployment. Entered receipts and daily closes are the normal shop data collection path.
+## Prepare the 6-Seven historical showcase
 
+The optional showcase replays sales from **Favorita Store 44** under the
+unofficial display name **6-Seven**. Obtain the Favorita competition data
+independently and place `train.csv` and `items.csv` in `data/raw/`. The
+competition data and generated shop database are excluded from Git.
+
+With Python 3.12 installed, run the preparer from the repository root:
+
+```powershell
+python -m demo.prepare_showcase
+docker compose -f compose.demo.yaml up --build -d
+```
+
+Open <http://127.0.0.1:8001>. This container uses
+`data/app/demo/shop.sqlite3`, separate from the blank shop's Docker volume.
+The preparer refuses to overwrite an existing demo database.
+The two Compose configurations use the same project name; run one at a time.
+
+The preparer selects 24 anonymous Store 44 items within the catalogue's
+product families, prioritising long and recent recorded histories and
+whole-unit sales. It loads 179 closed historical days and leaves
+**15 August 2017** open. Three example receipts for that date contain
+quantities that sum to the selected items' recorded daily sales. Closing the
+day through the application starts the forecast job. The selection details
+are saved locally to `data/app/demo/selection.json`.
+
+Favorita identifies items by number and category, not by consumer-facing
+product name. The showcase's product names and pack sizes are illustrative
+assignments. Opening stock, receipt prices, supplier quotes, and any feedback
+entered for the showcase are also illustrative. Supplier links are catalogue
+references; they do not verify the example prices or availability. Missing
+sales rows are treated as zero in the replay, which does not establish that
+actual demand was zero.
+
+Stop the showcase container with:
+
+```powershell
+docker compose -f compose.demo.yaml down
+```
+
+## Forecast behaviour
+
+The owner application requires **180 consecutive closed days** beginning no
+earlier than the product's first stocked date. For an eligible product,
+LightGBM is checked on three later historical weeks against a four-week
+matching-weekday median.
+When history is incomplete or the model performs worse, the application
+withholds a numeric forecast. A passing model produces seven dated daily
+estimates; the first is displayed as the next-day forecast. The inventory
+calculation combines those estimates with recorded stock, delivery time,
+order increments, and shelf-life settings.
+
+The shop-specific model uses past sales and calendar features. Favorita
+research results do not measure accuracy for a new shop, and passing the
+three-week check is not a guarantee of safe purchasing decisions.
+
+## Current boundaries
+
+- The application is a local prototype without accounts or access controls.
+- Receipts are stock and sales records, not formal tax invoices.
+- Supplier quotes in the showcase are invented. The website observation flow
+  currently expects an exact website product code; automated matching by name
+  and pack size is not implemented.
+- Website price observations can be incomplete or unavailable. Only offers
+  with confirmed product identity and complete purchasing terms can be
+  recommended.
+- Opportunity suggestions are based on recorded feedback and notes, not on
+  predicted demand for products outside the catalogue.
+- No owner-facing bulk import is provided for an ordinary shop; the showcase
+  preparer is a separate, local historical replay tool.
+
+## Implementation
+
+The application uses Python's standard-library HTTP server, SQLite, NumPy,
+pandas, scikit-learn, and LightGBM. `Dockerfile` and `compose.yaml` define
+the local deployment. `app/` contains the interface and shop workflow;
+`src/` contains forecasting, inventory, opportunity, and purchasing logic;
+`demo/` contains the reproducible showcase preparer and illustrative
+catalogue labels.
