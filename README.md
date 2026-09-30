@@ -48,7 +48,8 @@ erase entered records. The research explorer needs saved experiment files in
    `1.00`. Set the purchase deadline to seven days and press
    **Compare prices**. The application compares complete offers but places
    no order.
-5. In **Billing → History**, review and confirm **Done for the day**.
+5. In **Billing → History**, scroll below the transactions and select
+   **Done for the day**. Review the summary, then select **Confirm day close**.
    The Forecast tab will show **History needed** for this new product.
    A numerical forecast requires a longer dated sales history; this is
    expected behaviour, not a startup error.
@@ -90,7 +91,8 @@ interface is:
 1. Review **Store → Catalogue** for the 24 selected products and their
    starting stock.
 2. Review **Billing → History** for the three example bills and current
-   stock, then confirm **Done for the day**.
+   stock. Scroll below the transactions, select **Done for the day**, review
+   the summary, then select **Confirm day close**.
 3. Open **Forecast**. The background job checks each product against a
    simple historical reference. Products that fail that check remain in the
    table without a numerical forecast.

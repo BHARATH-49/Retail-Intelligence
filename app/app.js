@@ -188,19 +188,19 @@ function drawChart(rows) {
   const y = (value) => height - bottom - value / ceiling * (height - top - bottom);
   for (let step = 0; step <= 4; step++) {
     const value = ceiling * step / 4;
-    const line = svgNode('line', {x1: left, x2: width - right, y1: y(value), y2: y(value), stroke: '#e7eeee'});
+    const line = svgNode('line', {x1: left, x2: width - right, y1: y(value), y2: y(value), stroke: '#d9d6d4'});
     chart.append(line);
-    const label = svgNode('text', {x: left - 10, y: y(value) + 4, 'text-anchor': 'end', fill: '#748890', 'font-size': 11});
+    const label = svgNode('text', {x: left - 10, y: y(value) + 4, 'text-anchor': 'end', fill: '#67646b', 'font-size': 11});
     label.textContent = number(value, value < 10 ? 1 : 0);
     chart.append(label);
   }
   rows.forEach((row, index) => {
-    const label = svgNode('text', {x: x(index), y: height - 17, 'text-anchor': 'middle', fill: '#687e86', 'font-size': 11});
+    const label = svgNode('text', {x: x(index), y: height - 17, 'text-anchor': 'middle', fill: '#67646b', 'font-size': 11});
     label.textContent = row.date.slice(5);
     chart.append(label);
   });
   const series = [
-    ['average', '#e4a647'], ['linear', '#6869b0'], ['actual', '#238779'],
+    ['average', '#b48f52'], ['linear', '#3a3a40'], ['actual', '#7a1f35'],
   ];
   for (const [key, color] of series) {
     const path = svgNode('polyline', {

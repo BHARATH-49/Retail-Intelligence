@@ -24,7 +24,7 @@
       <p id="global-message" class="message" role="status" aria-live="polite"></p>
 
       <section id="panel-forecast" class="tab-panel">
-        <div class="page-heading"><div><p class="eyebrow">DEMAND & STOCK</p><h1>Forecast</h1><p id="forecast-date-note" class="muted">Close a day in Billing to prepare the next dated forecast.</p></div><div class="button-row"><button type="button" class="secondary" id="refresh-forecast-view">Refresh view</button><button type="button" class="secondary" id="retry-forecast" hidden>Retry calculation</button></div></div>
+        <div class="page-heading"><div><p class="eyebrow">DEMAND & STOCK</p><h1>Forecast</h1><p id="forecast-date-note" class="muted">In Billing → History, select Done for the day to prepare the next dated forecast.</p></div><div class="button-row"><button type="button" class="secondary" id="refresh-forecast-view">Refresh view</button><button type="button" class="secondary" id="retry-forecast" hidden>Retry calculation</button></div></div>
         <div class="notice">After a day closes, forecast work continues in the background. This screen shows its progress and then one dated forecast. Restocking uses the following seven days, delivery time, and your stock settings. Shop forecasts appear only after about six months of closed daily records and a later-date LightGBM check.</div>
         <div class="card"><div class="card-heading"><h2>Products</h2><span id="forecast-count" class="badge">0 products</span></div>
           <div class="table-wrap"><table><thead><tr><th>Product</th><th>Stock now</th><th>Forecast for date</th><th>Restocking check</th><th>Your choice</th></tr></thead><tbody id="forecast-rows"></tbody></table></div>

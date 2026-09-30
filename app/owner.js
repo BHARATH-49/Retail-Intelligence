@@ -390,13 +390,13 @@ async function loadForecast() {
       || (data.origin_day ? new Date(data.origin_day + 'T00:00:00').toLocaleDateString() : null);
     const job = data.job;
     $('forecast-date-note').textContent = !data.origin_day
-      ? 'Close a day in Billing to prepare the next dated forecast.'
+      ? 'In Billing → History, select Done for the day to prepare the next dated forecast.'
       : job?.status === 'queued' ? `Forecasts for ${data.origin_day} are queued.`
       : job?.status === 'running' ? `Forecasts for ${data.origin_day} are being prepared.`
       : job?.status === 'failed' ? `Forecast calculation failed: ${job.error || 'unknown error'}. You can retry.`
       : first ? `Forecast for ${forecastDay}, prepared after ${data.origin_day} closed.`
       : job?.status === 'complete' ? `Calculation completed for ${data.origin_day}. Products still need enough history or a passing model check.`
-      : !job ? `Close ${localDay()} in Billing to run the forecast check.`
+      : !job ? `In Billing → History, select Done for the day to close ${localDay()} and run the forecast check.`
       : `Latest closed day: ${data.origin_day}. Product forecasts are not available yet.`;
     $('retry-forecast').hidden = job?.status !== 'failed';
     const byId = new Map(data.products.map((row) => [row.product_id, row]));
