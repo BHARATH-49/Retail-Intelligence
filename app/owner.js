@@ -396,6 +396,7 @@ async function loadForecast() {
       : job?.status === 'failed' ? `Forecast calculation failed: ${job.error || 'unknown error'}. You can retry.`
       : first ? `Forecast for ${forecastDay}, prepared after ${data.origin_day} closed.`
       : job?.status === 'complete' ? `Calculation completed for ${data.origin_day}. Products still need enough history or a passing model check.`
+      : !job ? `Close ${localDay()} in Billing to run the forecast check.`
       : `Latest closed day: ${data.origin_day}. Product forecasts are not available yet.`;
     $('retry-forecast').hidden = job?.status !== 'failed';
     const byId = new Map(data.products.map((row) => [row.product_id, row]));
@@ -412,7 +413,10 @@ async function loadForecast() {
           ? (forecast.restock.suggested_order_units === null
             ? 'Needs review' : `Review ${amount(forecast.restock.suggested_order_units)} ${product.unit}`)
           : 'No order indicated'))
-        : (forecast?.status === 'validation_failed' ? 'Model check did not pass' : 'History needed');
+        : forecast?.status === 'validation_failed' ? 'Model check did not pass'
+        : forecast?.status === 'history_needed' ? 'History needed'
+        : !job ? 'Awaiting day close'
+        : 'Awaiting forecast check';
       const action = available ? button('Consider buying', () =>
         chooseToBuy(product, forecast.restock?.suggested_order_units)) : null;
       const tr = rowInto(body, [
